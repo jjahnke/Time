@@ -1,18 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package time;
-
 import java.text.DecimalFormat;
-
+import java.time.LocalTime;
+/**
+ *
+ * @author jdjahnke
+ */
 public class Time {
    private int hours;
    private int mins;
    
    public Time() {
        hours = 0;
+               
        mins = 0;
    }
    
@@ -21,7 +19,8 @@ public class Time {
            hours = h;
            mins = m;
        } else {
-           System.err.println("Error. Hours must be between 0 >= ");
+           System.err.println("Error. Hours must be 0 <= h < 24, and " +
+                   "Minutes must be 0<=mins < 60 ");
        }
    }
    
@@ -33,23 +32,47 @@ public class Time {
        return this.hours == other.hours && this.mins == other.mins;
    }
    
-   public int elapsedSince(Time other) {
-       //  other is t1
-       int diff = Math.abs(this.toMins() - other.toMins());
-       if (diff <= 12*60) {
-           return 1;//diff;
-       }  else {
-           return ( (12*60 - toMins()));
-       }
-   }
-   
+   @Override
    public String toString() {
-       DecimalFormat df = new DecimalFormat("00"); 
-       // "0" means don't omit leading zero 
-       return (df.format(hours) + ":" + df.format(mins));
-       // return String.format("%02d:%02d", hours, mins);
+       //DecimalFormat df = new DecimalFormat("00"); // "0" means don't omit leading zero
+       //return (df.format(hours) + ":" + df.format(mins));
+       return String.format("%02d:%02d", hours, mins);
 
    }
     
-}
+    /*
+   Write a method elaspsedSince(Time t) that returns the number of minutes 
+   elapsed from t to this time. Assume that t ≤ this time < t + 24h. 
+   For example, if this time is 8:30 and t is 22:55 the method assumes that t is on the previous day 
+   and returns 585 (minutes). Hint: use toMins
+   */
+
+    public int elapsedSince(Time t) {
+        int diff = Math.abs(this.compareTo(t));
+        System.out.println("diff " + diff);
+        if (diff > (720)) {
+            diff = this.toMins(); // + (24*60 - t.toMins());
+            
+            // t1 and t2 are reversss
+        }
+        return diff;    //return Math.abs(m1-m2);
+    }
     
+    public int compareTo(Time t) {
+        return this.toMins() - t.toMins();
+    }
+    
+    public void addMinutes(int m) {
+        int mins = this.toMins() + m;
+        this.hours = mins / 60;
+        this.mins = mins % 60;
+    }
+                
+    public Time createTime(int m ) {
+        int totalMins = this.toMins() + m;
+        int hours = totalMins / 60;
+        int min = totalMins % 60;
+        return new Time(hours,min);
+    }
+    
+}
